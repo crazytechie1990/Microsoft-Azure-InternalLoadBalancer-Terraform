@@ -30,9 +30,9 @@ resource "azurerm_network_interface" "az_networkif" {
 }
 
 resource "azurerm_network_interface_backend_address_pool_association" "az_backend_assoc" {
-  count = length(var.nics)
+  count = 2
   network_interface_id    = azurerm_network_interface.az_networkif[count.index].id
-  ip_configuration_name   = "NetworkIfcConfiguration"
+  ip_configuration_name   = "${var.IP_Config_Name}.${element(var.nics, count.index)}"
   backend_address_pool_id = azurerm_lb_backend_address_pool.az_lb_backendpool.id
   depends_on = [azurerm_network_interface.az_networkif]
 }
@@ -95,7 +95,7 @@ resource "azurerm_windows_virtual_machine" "az_VMs" {
 
 
 resource "azurerm_windows_virtual_machine" "az_TestVM" {
-  name                = "LoadBalancerTestVM"
+  name                = "TestVM"
   resource_group_name = azurerm_resource_group.az_project-rg.name
   location            = azurerm_resource_group.az_project-rg.location
   size                = "Standard_DS1_V2"
@@ -113,7 +113,7 @@ resource "azurerm_windows_virtual_machine" "az_TestVM" {
   source_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
-    sku       = "Windows Server 2019 Datacenter"
+    sku       = "2016-Datacenter"
     version   = "latest"
   }
   depends_on = [ azurerm_windows_virtual_machine.az_VMs ]

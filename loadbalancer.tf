@@ -1,15 +1,6 @@
-resource "azurerm_subnet" "az_subnet_lb" {
-  name                 = "AzureLoadBalancerSubnet"
-  resource_group_name  = azurerm_resource_group.az_project-rg.name
-  virtual_network_name = azurerm_virtual_network.az_vnet.name
-  address_prefixes     = ["10.1.0.0/24"]
-  depends_on = [ azurerm_bastion_host.az_bastion_host ]
-}
-
-
 resource "azurerm_lb" "az_loadbalancer" {
   name                = "TestLoadBalancer"
-  location            =  var.lb_location
+  location            =  azurerm_resource_group.az_project-rg.location
   resource_group_name =  azurerm_resource_group.az_project-rg.name
   sku = "Standard"
 
